@@ -9,18 +9,22 @@ const PORT = process.env.PORT || 3001;
 
 const app = express();
 
+// express middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+// gets the index.html page
 app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
+//gets the notes.html page
 app.get("/notes", (req, res) => {
     res.sendFile(path.join(__dirname, "/public/notes.html"));
 });
 
+// gets the current notes saved in the database
 app.get("/api/notes", (req, res) =>{
     fs.readFile("./db/db.json", "utf8", (err, data) =>{
         if(err){
@@ -32,6 +36,7 @@ app.get("/api/notes", (req, res) =>{
     });
 });
 
+// adds a new note to the database
 app.post("/api/notes", (req, res)=>{
     const {title, text} = req.body;
     let newNote;
@@ -63,6 +68,7 @@ app.post("/api/notes", (req, res)=>{
     })
 });
 
+// deletes a note from the database
 app.delete("/api/notes/:id", (req, res) =>{
     const {id} = req.params;
 
